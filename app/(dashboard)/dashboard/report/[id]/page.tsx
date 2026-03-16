@@ -148,23 +148,44 @@ export default function ReportPage() {
         </Card>
       )}
 
-      {/* Audio Transcript */}
-      {(analysis.type === "audio" && analysis.audioTranscript) && (
+      {/* Audio Player + Transcript */}
+      {analysis.type === "audio" && (
         <Card shadow="purple">
-          <div className="p-6">
-            <h3 className="font-mono text-sm font-bold text-muted-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+          <div className="p-6 space-y-4">
+            <h3 className="font-mono text-sm font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
               <Mic className="w-4 h-4" />
-              Audio Transcript
+              Audio Recording
             </h3>
-            <div className="bg-muted rounded-lg p-4 border border-card-border">
-              <p className="font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                {analysis.audioTranscript}
-              </p>
-            </div>
-            {analysis.originalFileName && (
-              <p className="font-mono text-xs text-muted-foreground mt-3">
-                File: {analysis.originalFileName}
-              </p>
+
+            {/* Audio player if file exists */}
+            {analysis.filePath && (
+              <div className="bg-muted rounded-lg p-3 border border-card-border">
+                <p className="font-mono text-xs text-muted-foreground mb-2">
+                  {analysis.originalFileName || "Audio file"}
+                </p>
+                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                <audio
+                  controls
+                  className="w-full h-10"
+                  src={`/api/audio/${encodeURIComponent(analysis.filePath.split("/").pop() || "")}`}
+                >
+                  Your browser does not support the audio element.
+                </audio>
+              </div>
+            )}
+
+            {/* Transcript */}
+            {analysis.audioTranscript && (
+              <>
+                <h4 className="font-mono text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  Transcript
+                </h4>
+                <div className="bg-muted rounded-lg p-4 border border-card-border max-h-48 overflow-y-auto">
+                  <p className="font-mono text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                    {analysis.audioTranscript}
+                  </p>
+                </div>
+              </>
             )}
           </div>
         </Card>

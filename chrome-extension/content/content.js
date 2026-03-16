@@ -1,28 +1,39 @@
 // Cipherium Extension - Content Script
 // Reads screenshot from extension storage and passes it to the dashboard
 
-// Check if we're on the dashboard with extension source
 if (window.location.search.includes("source=extension")) {
-  let attempts = 0;
+  let messageAcknowledged = false;
+  let postAttempts = 0;
+  const MAX_POST_ATTEMPTS = 20;
+
+  // Listen for acknowledgment from the page
+  window.addEventListener("message", function (event) {
+    if (event.data?.type === "cipherium-ack") {
+      messageAcknowledged = true;
+      chrome.storage.session.remove("screenshotData");
+      console.log("[Cipherium] Screenshot acknowledged by dashboard.");
+    }
+  });
+
+  function postScreenshot(dataUrl) {
+    if (messageAcknowledged || postAttempts >= MAX_POST_ATTEMPTS) return;
+    postAttempts++;
+    window.postMessage({ type: "cipherium-screenshot", imageDataUrl: dataUrl }, "*");
+    // Retry every 200ms until acknowledged
+    setTimeout(() => postScreenshot(dataUrl), 200);
+  }
 
   function tryReadScreenshot() {
-    chrome.storage.session.get("screenshotData", (result) => {
+    chrome.storage.session.get("screenshotData", function (result) {
       if (result.screenshotData) {
-        // Post message to the page
-        window.postMessage(
-          { type: "cipherium-screenshot", imageDataUrl: result.screenshotData },
-          "*"
-        );
-        // Clear the stored screenshot
-        chrome.storage.session.remove("screenshotData");
-        console.log("[Cipherium] Screenshot data sent to dashboard");
-      } else if (attempts < 10) {
-        attempts++;
-        setTimeout(tryReadScreenshot, 200);
+        postScreenshot(result.screenshotData);
+      } else if (postAttempts === 0) {
+        // Data not in storage yet, retry reading
+        setTimeout(tryReadScreenshot, 100);
       }
     });
   }
 
-  // Wait a bit for the page to be ready
-  setTimeout(tryReadScreenshot, 300);
+  // Start reading immediately
+  tryReadScreenshot();
 }

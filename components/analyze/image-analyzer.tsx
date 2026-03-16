@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -37,9 +37,9 @@ export function ImageAnalyzer({ initialImageDataUrl, autoAnalyze }: ImageAnalyze
     }
   }, [initialImageDataUrl]);
 
-  // Auto-analyze when image comes from extension
-  const handleSubmit = useCallback(async () => {
-    if (files.length === 0 && !imageDataUrl) {
+  const handleSubmit = useCallback(async (currentImageDataUrl?: string | null) => {
+    const imgUrl = currentImageDataUrl !== undefined ? currentImageDataUrl : imageDataUrl;
+    if (files.length === 0 && !imgUrl) {
       toast("Please select an image file", "warning");
       return;
     }
@@ -50,9 +50,9 @@ export function ImageAnalyzer({ initialImageDataUrl, autoAnalyze }: ImageAnalyze
 
       if (files.length > 0) {
         formData.append("file", files[0]);
-      } else if (imageDataUrl) {
+      } else if (imgUrl) {
         // Convert data URL to blob
-        const response = await fetch(imageDataUrl);
+        const response = await fetch(imgUrl);
         const blob = await response.blob();
         const file = new File([blob], "screenshot.png", { type: "image/png" });
         formData.append("file", file);
@@ -79,11 +79,17 @@ export function ImageAnalyzer({ initialImageDataUrl, autoAnalyze }: ImageAnalyze
     }
   }, [files, imageDataUrl, toast, router]);
 
-  // Auto-analyze if initialImageDataUrl provided and autoAnalyze is true
-  if (initialImageDataUrl && autoAnalyze && !hasAutoAnalyzed.current && !loading) {
-    hasAutoAnalyzed.current = true;
-    setTimeout(handleSubmit, 500);
-  }
+  // Button click handler - uses current state
+  const handleClick = useCallback(() => handleSubmit(), [handleSubmit]);
+
+  // Auto-analyze if initialImageDataUrl provided and autoAnalyze is true (proper effect)
+  useEffect(() => {
+    if (initialImageDataUrl && autoAnalyze && !hasAutoAnalyzed.current) {
+      hasAutoAnalyzed.current = true;
+      const timer = setTimeout(() => handleSubmit(initialImageDataUrl), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [initialImageDataUrl, autoAnalyze, handleSubmit]);
 
   const clearImage = () => {
     setFiles([]);
@@ -131,7 +137,7 @@ export function ImageAnalyzer({ initialImageDataUrl, autoAnalyze }: ImageAnalyze
 
       <div className="flex justify-end mt-4">
         <Button
-          onClick={handleSubmit}
+          onClick={handleClick}
           variant="primary"
           disabled={loading || !hasImage}
         >

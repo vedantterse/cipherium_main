@@ -29,11 +29,25 @@ const typeConfig = {
   image: { icon: ImageIcon, label: "Image", color: "bg-cyber-yellow/10 text-cyber-yellow border-cyber-yellow/30" },
 };
 
+function getPreviewText(analysis: Analysis): string {
+  if (analysis.aiSummary) return analysis.aiSummary;
+  if (analysis.type === "audio") {
+    return analysis.inputText
+      ? `Transcript: ${analysis.inputText.slice(0, 100)}${analysis.inputText.length > 100 ? "…" : ""}`
+      : analysis.originalFileName || "Audio analysis";
+  }
+  if (analysis.type === "text" && analysis.inputText) {
+    return analysis.inputText.slice(0, 120) + (analysis.inputText.length > 120 ? "…" : "");
+  }
+  return "Analysis complete";
+}
+
 export default function HistoryPage() {
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -42,6 +56,7 @@ export default function HistoryPage() {
       .then((data) => {
         setAnalyses(data.analyses || []);
         setTotalPages(data.totalPages || 1);
+        setTotal(data.total || 0);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -57,7 +72,7 @@ export default function HistoryPage() {
             Analysis History
           </h1>
           <p className="font-mono text-sm text-muted-foreground mt-1">
-            View all your past phishing analyses
+            {loading ? "Loading…" : `${total} total analysis${total !== 1 ? "es" : ""}`}
           </p>
         </div>
         <Link href="/dashboard/analyze">
@@ -95,17 +110,18 @@ export default function HistoryPage() {
           </div>
         </Card>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {analyses.map((analysis) => {
             const config = typeConfig[analysis.type];
             const Icon = config.icon;
             const isHighRisk = analysis.riskLevel === "high_risk";
+            const previewText = getPreviewText(analysis);
 
             return (
               <Link key={analysis.id} href={`/dashboard/report/${analysis.id}`}>
                 <Card
                   shadow={isHighRisk ? "red" : "none"}
-                  className={`p-4 hover:border-cyber-green transition-all cursor-pointer group ${
+                  className={`p-4 hover:border-cyber-green/60 transition-all cursor-pointer group ${
                     isHighRisk ? "border-cyber-red/50" : ""
                   }`}
                 >
@@ -129,7 +145,7 @@ export default function HistoryPage() {
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${config.color}`}>
                           {config.label.toUpperCase()}
                         </span>
@@ -142,11 +158,11 @@ export default function HistoryPage() {
                           </span>
                         )}
                       </div>
-                      <p className="font-mono text-sm text-foreground truncate">
-                        {analysis.aiSummary || analysis.inputText?.slice(0, 80) || "Analysis complete"}
+                      <p className="font-mono text-sm text-foreground line-clamp-2 leading-relaxed">
+                        {previewText}
                       </p>
-                      {analysis.originalFileName && (
-                        <p className="font-mono text-xs text-muted-foreground mt-1">
+                      {analysis.originalFileName && analysis.type !== "text" && (
+                        <p className="font-mono text-xs text-muted-foreground mt-1 truncate">
                           {analysis.originalFileName}
                         </p>
                       )}
