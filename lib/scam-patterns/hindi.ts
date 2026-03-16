@@ -1,0 +1,88 @@
+import type { ScamPattern } from "./common";
+
+export const HINDI_PATTERNS: ScamPattern[] = [
+  {
+    pattern: /OTP\s*(नंबर|भेजें|बताएं|share|दें|दीजिए|बताइए)/i,
+    category: "otp_request",
+    severity: "high",
+    description: "OTP sharing request in Hindi",
+    translation: "OTP number/send/tell/share",
+  },
+  {
+    pattern: /KYC\s*(अपडेट|करें|expire|समाप्त|वेरिफ|पूरा)/i,
+    category: "fake_authority",
+    severity: "high",
+    description: "Fake KYC update demand",
+    translation: "KYC update/verify/expire",
+  },
+  {
+    pattern: /(बैंक\s*अकाउंट|खाता|एकाउंट).*(बंद|ब्लॉक|freeze|सस्पेंड|निलंबित)/i,
+    category: "account_threat",
+    severity: "high",
+    description: "Bank account blocking threat",
+    translation: "Bank account... closed/blocked/frozen/suspended",
+  },
+  {
+    pattern: /(लॉटरी|इनाम|prize|जीत|विजेता).*(₹|रुपये|Rs|लाख|करोड़)/i,
+    category: "prize_scam",
+    severity: "high",
+    description: "Lottery/prize scam in Hindi",
+    translation: "Lottery/prize/win/winner... rupees/lakhs/crores",
+  },
+  {
+    pattern: /(तुरंत|जल्दी|अभी|फटाफट).*(पैसे|भुगतान|payment|transfer|ट्रांसफर)/i,
+    category: "payment_demand",
+    severity: "high",
+    description: "Urgent payment demand",
+    translation: "Immediately/quickly... money/payment/transfer",
+  },
+  {
+    pattern: /(आधार|aadhaar|पैन|PAN)\s*(कार्ड|नंबर|card|number|अपडेट|लिंक)/i,
+    category: "identity_theft",
+    severity: "high",
+    description: "Aadhaar/PAN card information request",
+    translation: "Aadhaar/PAN card/number/update/link",
+  },
+  {
+    pattern: /(पुलिस|CBI|ED|RBI|सरकार|government).*(कार्रवाई|action|गिरफ्तार|arrest|नोटिस|notice)/i,
+    category: "fake_authority",
+    severity: "high",
+    description: "Fake authority/government impersonation",
+    translation: "Police/CBI/ED/RBI/government... action/arrest/notice",
+  },
+  {
+    pattern: /(लोन|ऋण|loan).*(स्वीकृत|approved|मंजूर|तुरंत|instant)/i,
+    category: "loan_scam",
+    severity: "medium",
+    description: "Instant loan approval scam",
+    translation: "Loan... approved/instant",
+  },
+  {
+    pattern: /(नौकरी|job|रोजगार).*(घर\s*बैठे|work\s*from\s*home|लाख\s*महीना|earning)/i,
+    category: "job_scam",
+    severity: "medium",
+    description: "Fake job offer scam",
+    translation: "Job... work from home/earn lakhs",
+  },
+  {
+    pattern: /(शेयर|invest|निवेश|mutual\s*fund).*(guaranteed|गारंटी|double|दोगुना|तिगुना)/i,
+    category: "investment_scam",
+    severity: "high",
+    description: "Investment scam with guaranteed returns",
+    translation: "Share/invest... guaranteed/double/triple",
+  },
+  {
+    pattern: /(डेबिट|क्रेडिट|debit|credit)\s*(कार्ड|card).*(नंबर|number|एक्सपायर|expire|CVV)/i,
+    category: "identity_theft",
+    severity: "high",
+    description: "Card details request",
+    translation: "Debit/credit card... number/expire/CVV",
+  },
+  {
+    pattern: /(भरोसा|trust\s*me|विश्वास|believe).*(भेज|send|transfer|दे)/i,
+    category: "payment_demand",
+    severity: "medium",
+    description: "Trust-based payment request",
+    translation: "Trust me/believe... send/transfer",
+  },
+];

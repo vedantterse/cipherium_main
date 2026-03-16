@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 280px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #e4e4ef;
+      padding: 1.5rem;
+    }
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #00ff41, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 0.35rem;
+    }
+    .tagline {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #9595a8;
+      margin-bottom: 1.25rem;
+    }
+    .btn {
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #00ff41, #00d4ff);
+      color: #0a0a0f;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 255, 65, 0.3);
+    }
+    .btn-secondary {
+      background: #1a1a26;
+      color: #e4e4ef;
+      border: 1px solid #2a2a3a;
+    }
+    .btn-secondary:hover {
+      background: #2a2a3a;
+      border-color: #00ff41;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .status {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #9595a8;
+      margin-top: 0.75rem;
+      min-height: 1em;
+    }
+    .status.success { color: #00ff41; }
+    .status.error { color: #ff006e; }
+    .divider {
+      height: 1px;
+      background: #2a2a3a;
+      margin: 1rem 0;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: #9595a8;
+    }
+    .footer a {
+      color: #00d4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="logo">CIPHERIUM</div>
+  <p class="tagline">AI Phishing Detection for Indian Languages</p>
+
+  <button class="btn btn-primary" id="captureBtn">
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    Capture Screenshot & Analyze
+  </button>
+
+  <button class="btn btn-secondary" id="dashboardBtn">
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7"/>
+      <rect x="14" y="3" width="7" height="7"/>
+      <rect x="14" y="14" width="7" height="7"/>
+      <rect x="3" y="14" width="7" height="7"/>
+    </svg>
+    Open Dashboard
+  </button>
+
+  <p class="status" id="status"></p>
+
+  <div class="divider"></div>
+
+  <div class="footer">
+    <a href="http://localhost:3000/dashboard/analyze" target="_blank">Paste Text</a> ·
+    <a href="http://localhost:3000/dashboard/history" target="_blank">History</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

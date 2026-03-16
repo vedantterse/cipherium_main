@@ -1,26 +1,164 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0f;
+  --foreground: #e0e0e0;
+  --card: #111118;
+  --card-foreground: #e0e0e0;
+  --card-border: #2a2a3a;
+  --muted: #1a1a25;
+  --muted-foreground: #888898;
+  --accent-green: #00ff41;
+  --accent-blue: #00d4ff;
+  --accent-purple: #b44aff;
+  --accent-red: #ff006e;
+  --accent-yellow: #ffbe0b;
+  --accent-orange: #fb5607;
+  --border-width: 3px;
+  --shadow-offset: 4px;
+  --radius: 4px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-cyber-green: var(--accent-green);
+  --color-cyber-blue: var(--accent-blue);
+  --color-cyber-purple: var(--accent-purple);
+  --color-cyber-red: var(--accent-red);
+  --color-cyber-yellow: var(--accent-yellow);
+  --color-cyber-orange: var(--accent-orange);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Neo-Brutalism Card */
+.brutal-card {
+  border: var(--border-width) solid var(--card-border);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-green);
+  border-radius: var(--radius);
+  background: var(--card);
 }
+
+.brutal-card-red {
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-red);
+}
+
+.brutal-card-blue {
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-blue);
+}
+
+.brutal-card-yellow {
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-yellow);
+}
+
+.brutal-card-purple {
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-purple);
+}
+
+/* Neo-Brutalism Button */
+.brutal-button {
+  border: var(--border-width) solid var(--foreground);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--foreground);
+  border-radius: var(--radius);
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.brutal-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--foreground);
+}
+
+.brutal-button:active {
+  transform: translate(var(--shadow-offset), var(--shadow-offset));
+  box-shadow: 0 0 0 var(--foreground);
+}
+
+.brutal-button-green {
+  border-color: var(--accent-green);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-green);
+  color: var(--accent-green);
+}
+
+.brutal-button-green:hover {
+  box-shadow: 2px 2px 0 var(--accent-green);
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.brutal-button-red {
+  border-color: var(--accent-red);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--accent-red);
+  color: var(--accent-red);
+}
+
+.brutal-button-red:hover {
+  box-shadow: 2px 2px 0 var(--accent-red);
+  background: rgba(255, 0, 110, 0.1);
+}
+
+/* Animated Background Grid */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Glow Effects */
+.glow-green { text-shadow: 0 0 10px rgba(0, 255, 65, 0.5); }
+.glow-red { text-shadow: 0 0 10px rgba(255, 0, 110, 0.5); }
+.glow-blue { text-shadow: 0 0 10px rgba(0, 212, 255, 0.5); }
+
+/* Scanline overlay */
+.scanline::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 65, 0.015) 2px,
+    rgba(0, 255, 65, 0.015) 4px
+  );
+  pointer-events: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--background); }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-green); }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Pulse animation for danger badges */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 110, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(255, 0, 110, 0.6); }
+}
+
+.pulse-danger {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Typing cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: "█";
+  animation: blink 1s step-end infinite;
+  color: var(--accent-green);
 }
