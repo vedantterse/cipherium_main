@@ -1,5 +1,5 @@
 // Cipherium Extension - Popup Script
-const DASHBOARD_URL = "http://localhost:3000/dashboard/analyze?source=extension";
+const DASHBOARD_URL = "https://cipherium.terselabs.buzz/dashboard/analyze?source=extension";
 
 const captureBtn = document.getElementById("captureBtn");
 const dashboardBtn = document.getElementById("dashboardBtn");
@@ -40,6 +40,6 @@ captureBtn.addEventListener("click", async () => {
 
 // Open dashboard
 dashboardBtn.addEventListener("click", () => {
-  chrome.tabs.create({ url: "http://localhost:3000/dashboard" });
+  chrome.tabs.create({ url: "https://cipherium.terselabs.buzz/dashboard" });
   window.close();
 });

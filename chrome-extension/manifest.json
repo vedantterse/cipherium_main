@@ -15,7 +15,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["http://localhost:3000/dashboard*"],
+      "matches": ["https://cipherium.terselabs.buzz/dashboard*"],
       "js": ["content/content.js"],
       "run_at": "document_idle"
     }
