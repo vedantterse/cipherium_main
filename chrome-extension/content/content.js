@@ -16,7 +16,11 @@ if (window.location.search.includes("source=extension")) {
   });
 
   function postScreenshot(dataUrl) {
-    if (messageAcknowledged || postAttempts >= MAX_POST_ATTEMPTS) return;
+    if (messageAcknowledged) return;
+    if (postAttempts >= MAX_POST_ATTEMPTS) {
+      console.warn("[Cipherium] Max post attempts reached without acknowledgment. Screenshot may have been missed.");
+      return;
+    }
     postAttempts++;
     window.postMessage({ type: "cipherium-screenshot", imageDataUrl: dataUrl }, "*");
     // Retry every 200ms until acknowledged

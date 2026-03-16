@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
 
 interface Tab {
   id: string;
@@ -18,18 +17,22 @@ interface TabsProps {
 
 export function Tabs({ tabs, activeTab, onTabChange, className }: TabsProps) {
   return (
-    <div className={cn("flex gap-2", className)}>
+    <div
+      className={cn(
+        "flex gap-1 p-1 rounded-lg bg-muted border border-card-border",
+        className
+      )}
+    >
       {tabs.map((tab) => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
           className={cn(
-            "px-4 py-2.5 font-mono text-sm font-bold uppercase tracking-wider",
-            "border-[3px] rounded-[4px] transition-all duration-100",
-            "flex items-center gap-2",
+            "flex-1 px-4 py-2 font-mono text-sm font-semibold transition-all duration-150",
+            "rounded-md flex items-center justify-center gap-2",
             activeTab === tab.id
-              ? "border-cyber-green bg-cyber-green/10 text-cyber-green shadow-[3px_3px_0_theme(colors.cyber-green)]"
-              : "border-card-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+              ? "bg-card border border-card-border text-cyber-green shadow-sm"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           {tab.icon}

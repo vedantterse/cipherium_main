@@ -29,15 +29,17 @@ const typeConfig = {
   image: { icon: ImageIcon, label: "Image", color: "bg-cyber-yellow/10 text-cyber-yellow border-cyber-yellow/30" },
 };
 
+const PREVIEW_LENGTH = 120;
+
 function getPreviewText(analysis: Analysis): string {
   if (analysis.aiSummary) return analysis.aiSummary;
   if (analysis.type === "audio") {
     return analysis.inputText
-      ? `Transcript: ${analysis.inputText.slice(0, 100)}${analysis.inputText.length > 100 ? "…" : ""}`
+      ? `Transcript: ${analysis.inputText.slice(0, PREVIEW_LENGTH)}${analysis.inputText.length > PREVIEW_LENGTH ? "…" : ""}`
       : analysis.originalFileName || "Audio analysis";
   }
   if (analysis.type === "text" && analysis.inputText) {
-    return analysis.inputText.slice(0, 120) + (analysis.inputText.length > 120 ? "…" : "");
+    return analysis.inputText.slice(0, PREVIEW_LENGTH) + (analysis.inputText.length > PREVIEW_LENGTH ? "…" : "");
   }
   return "Analysis complete";
 }

@@ -36,8 +36,9 @@ export function TextAnalyzer() {
       const data = await res.json();
       toast("Analysis complete!", "success");
       router.push(`/dashboard/report/${data.analysisId}`);
-    } catch (err: any) {
-      toast(err.message || "Analysis failed", "error");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Analysis failed";
+      toast(message, "error");
     } finally {
       setLoading(false);
     }

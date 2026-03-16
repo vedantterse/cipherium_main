@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,19 +15,29 @@ export function AudioAnalyzer() {
   const { toast } = useToast();
   const router = useRouter();
 
+  const audioUrlRef = useRef<string | null>(null);
+
   const handleFiles = useCallback((newFiles: File[]) => {
     // Revoke previous object URL to avoid memory leaks
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
     setFiles(newFiles);
     if (newFiles.length > 0) {
-      setAudioUrl(URL.createObjectURL(newFiles[0]));
+      const url = URL.createObjectURL(newFiles[0]);
+      audioUrlRef.current = url;
+      setAudioUrl(url);
     } else {
       setAudioUrl(null);
     }
-  }, [audioUrl]);
+  }, []);
 
   const clearAudio = () => {
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current);
+      audioUrlRef.current = null;
+    }
     setFiles([]);
     setAudioUrl(null);
   };

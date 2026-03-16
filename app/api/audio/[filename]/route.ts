@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { db } from "@/lib/db";
+import { analyses } from "@/lib/db/schema";
 import { requireAuth } from "@/lib/auth/middleware";
+import { eq, and } from "drizzle-orm";
 import path from "path";
 import fs from "fs";
 
@@ -8,12 +11,29 @@ export async function GET(
   { params }: { params: Promise<{ filename: string }> }
 ) {
   try {
-    await requireAuth();
+    const user = await requireAuth();
 
     const { filename } = await params;
 
     // Sanitize the filename to prevent path traversal
     const sanitized = path.basename(filename);
+
+    // Verify ownership: ensure this audio file belongs to the authenticated user
+    const record = db
+      .select({ id: analyses.id })
+      .from(analyses)
+      .where(
+        and(
+          eq(analyses.userId, user.userId),
+          eq(analyses.filePath, `uploads/audio/${sanitized}`)
+        )
+      )
+      .get();
+
+    if (!record) {
+      return NextResponse.json({ error: "Audio file not found" }, { status: 404 });
+    }
+
     const filePath = path.join(process.cwd(), "uploads", "audio", sanitized);
 
     if (!fs.existsSync(filePath)) {
